@@ -1,0 +1,9 @@
+.env
+venv/
+Scrapped/
+Clean Data/
+page_source.html
+stop.txt
+error_log.txt
+temp_url.txt
+__pycache__/

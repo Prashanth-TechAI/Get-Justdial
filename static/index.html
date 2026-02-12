@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get JustDial - Smart Business Scraper</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1419 100%);
+      color: #e5e7eb; 
+      margin: 0; 
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background particles */
+    .bg-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+      25% { transform: translate(100px, -100px) scale(1.2); opacity: 0.5; }
+      50% { transform: translate(-50px, -200px) scale(0.8); opacity: 0.4; }
+      75% { transform: translate(-150px, -100px) scale(1.1); opacity: 0.6; }
+    }
+
+    .hero { 
+      position: relative;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      min-height: 85vh; 
+      text-align: center;
+      padding: 2rem;
+      z-index: 1;
+    }
+
+    .hero-content {
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-text { 
+      font-size: clamp(2rem, 8vw, 4rem);
+      font-weight: 800; 
+      background: linear-gradient(135deg, #22c55e 0%, #10b981 50%, #059669 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 3s ease infinite, textGlow 2s ease-in-out infinite;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes textGlow {
+      0%, 100% { filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.3)); }
+      50% { filter: drop-shadow(0 0 40px rgba(34, 197, 94, 0.6)); }
+    }
+
+    .hero-sub { 
+      max-width: 650px; 
+      margin: 0 auto 2rem;
+      color: #cbd5e1;
+      font-size: clamp(1rem, 2vw, 1.125rem);
+      line-height: 1.7;
+      animation: fadeInUp 0.8s ease-out 0.2s backwards;
+    }
+
+    .primary-btn {
+      margin-top: 1.5rem;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1.125rem;
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: fadeInUp 0.8s ease-out 0.4s backwards, pulse 2s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .primary-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .primary-btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .primary-btn:hover { 
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      box-shadow: 0 15px 40px rgba(34, 197, 94, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0);
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4); }
+      50% { box-shadow: 0 10px 40px rgba(34, 197, 94, 0.6); }
+    }
+
+    .container { 
+      max-width: 1000px; 
+      margin: 0 auto 3rem; 
+      padding: 1rem 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card { 
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(20px);
+      padding: 2.5rem; 
+      border-radius: 1.5rem; 
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(34, 197, 94, 0.1);
+      transition: all 0.3s ease;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card:hover {
+      border-color: rgba(34, 197, 94, 0.3);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+    }
+
+    h2 {
+      font-size: 1.875rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #22c55e, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #f1f5f9;
+    }
+
+    .card p {
+      line-height: 1.7;
+      color: #cbd5e1;
+      margin-bottom: 1rem;
+    }
+
+    .card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .card li {
+      padding: 0.75rem 0;
+      padding-left: 2rem;
+      position: relative;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    .card li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #22c55e;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    label { 
+      display: block; 
+      margin-top: 1.25rem; 
+      font-size: 0.95rem; 
+      color: #cbd5e1;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    input, textarea { 
+      width: 100%; 
+      padding: 0.875rem 1rem; 
+      border-radius: 0.75rem; 
+      border: 2px solid rgba(34, 197, 94, 0.2);
+      background: rgba(2, 6, 23, 0.6);
+      color: #e5e7eb;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    input:focus, textarea:focus { 
+      border-color: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+      background: rgba(2, 6, 23, 0.8);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #64748b;
+    }
+
+    button { 
+      margin-top: 1.25rem; 
+      padding: 0.875rem 1.75rem; 
+      border-radius: 50px; 
+      border: none; 
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: #fff; 
+      font-weight: 700; 
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 5px 15px rgba(34, 197, 94, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s;
+    }
+
+    button:hover::after {
+      width: 250px;
+      height: 250px;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      box-shadow: 0 8px 20px rgba(34, 197, 94, 0.5);
+      transform: translateY(-2px);
+    }
+
+    button:disabled { 
+      background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+      cursor: not-allowed;
+      opacity: 0.6;
+      transform: none;
+    }
+
+    .row { 
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem; 
+      margin-top: 2rem;
+    }
+
+    .col { 
+      background: rgba(2, 6, 23, 0.4);
+      padding: 1.5rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(34, 197, 94, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .col:hover {
+      border-color: rgba(34, 197, 94, 0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .status { 
+      margin-top: 1rem; 
+      font-size: 0.95rem; 
+      color: #cbd5e1;
+      white-space: pre-line;
+      padding: 1rem;
+      background: rgba(2, 6, 23, 0.4);
+      border-radius: 0.75rem;
+      border-left: 3px solid #22c55e;
+    }
+
+    .results { 
+      margin-top: 1.5rem;
+    }
+
+    .link { 
+      color: #22c55e;
+      text-decoration: none;
+      cursor: pointer; 
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      border: none;
+      background: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .link:hover {
+      color: #16a34a;
+      text-decoration: underline;
+    }
+
+    .status-row { 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 0.75rem; 
+      margin-top: 1rem;
+    }
+
+    .chip {
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      font-size: 0.875rem;
+      color: #cbd5e1;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      animation: slideIn 0.4s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .chip:hover {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: rgba(34, 197, 94, 0.5);
+    }
+
+    .jd-link { 
+      margin-top: 1rem; 
+      font-size: 0.9rem;
+      padding: 0.75rem;
+      background: rgba(34, 197, 94, 0.05);
+      border-radius: 0.5rem;
+      border-left: 3px solid #22c55e;
+    }
+
+    .jd-link a { 
+      color: #22c55e;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .jd-link a:hover {
+      color: #16a34a;
+      text-decoration: underline;
+    }
+
+    .loader {
+      margin: 1.5rem auto;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 4px solid rgba(34, 197, 94, 0.1);
+      border-top-color: #22c55e;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .preview { 
+      margin-top: 2rem;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      overflow: hidden;
+      border-radius: 0.75rem;
+    }
+
+    .preview-table th,
+    .preview-table td {
+      border: 1px solid rgba(34, 197, 94, 0.1);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    .preview-table th {
+      background: rgba(34, 197, 94, 0.1);
+      color: #f1f5f9;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .preview-table tbody tr {
+      transition: background 0.2s ease;
+    }
+
+    .preview-table tbody tr:nth-child(even) {
+      background: rgba(2, 6, 23, 0.3);
+    }
+
+    .preview-table tbody tr:hover {
+      background: rgba(34, 197, 94, 0.1);
+    }
+
+    .result-item {
+      margin-top: 1rem;
+      padding: 1.25rem;
+      background: rgba(2, 6, 23, 0.4);
+      border-radius: 0.75rem;
+      border: 1px solid rgba(34, 197, 94, 0.1);
+      transition: all 0.3s ease;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .result-item:hover {
+      border-color: rgba(34, 197, 94, 0.3);
+      transform: translateX(5px);
+    }
+
+    .result-item strong {
+      color: #22c55e;
+      font-size: 1.1rem;
+    }
+
+    /* Scroll to top button */
+    .scroll-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(34, 197, 94, 0.4);
+      z-index: 100;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .scroll-top:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.6);
+    }
+
+    .scroll-top::before {
+      content: '↑';
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .hero {
+        min-height: 70vh;
+        padding: 1.5rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .status-row {
+        flex-direction: column;
+      }
+    }
+
+    /* Loading state */
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+
+    .loading-shimmer {
+      background: linear-gradient(90deg, rgba(34, 197, 94, 0.1) 25%, rgba(34, 197, 94, 0.3) 50%, rgba(34, 197, 94, 0.1) 75%);
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background particles -->
+  <div class="bg-particles" id="particles"></div>
+
+  <!-- HERO / LANDING -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="fade-text">Get JustDial</div>
+      <p class="hero-sub">
+        A smart JustDial scraper that lets you search any category—builders, brokers, plumbers, and more—across Indian cities. 
+        Use manual filters or natural language with AI for intelligent searches.
+      </p>
+      <button class="primary-btn" id="get-started-btn">Get Started →</button>
+    </div>
+  </div>
+
+  <!-- ABOUT SECTION -->
+  <div class="container">
+    <div class="card">
+      <h2>✨ About this project</h2>
+      <p>
+        This tool scrapes JustDial for any category you specify—builders,
+        real-estate agents, civil contractors, plumbers, and more. It supports:
+      </p>
+      <ul>
+        <li>Manual search by city + keyword (single or multiple cities)</li>
+        <li>Natural language search: describe what you want and AI converts it to cities + keyword</li>
+        <li>CSV export per city with complete business details</li>
+        <li>Quick table preview of the scraped CSV inside this page</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- APP SECTION -->
+  <div class="container" id="app-section" style="display:none;">
+    <div class="card">
+      <div class="row">
+        <div class="col">
+          <h3>🔍 Manual search</h3>
+          <label>Cities (comma-separated)</label>
+          <input id="manual-cities" placeholder="Jaipur, Delhi, Mumbai" />
+          <label>Search keyword</label>
+          <input id="manual-search" placeholder="builders" />
+          <button id="manual-btn">Search &amp; Scrape</button>
+        </div>
+        <div class="col">
+          <h3>🤖 Natural language search (AI)</h3>
+          <label>Describe what you want</label>
+          <textarea id="nl-query" rows="4" placeholder="Get all plumbers in Jaipur and Delhi"></textarea>
+          <button id="nl-btn">AI Search &amp; Scrape</button>
+        </div>
+      </div>
+
+      <!-- Scrape summary & status -->
+      <h3 style="margin-top:2.5rem;">📊 Scrape status</h3>
+      <div class="status-row">
+        <div class="chip" id="mode-chip">Mode: -</div>
+        <div class="chip" id="search-chip">Search: -</div>
+        <div class="chip" id="cities-chip">Cities: -</div>
+      </div>
+
+      <div class="status" id="status" style="display:none;"></div>
+      <div class="jd-link" id="jd-link"></div>
+
+      <div class="loader" id="loader" hidden></div>
+
+      <div class="preview" id="preview"></div>
+
+      <div class="results" id="results"></div>
+    </div>
+  </div>
+
+  <!-- Scroll to top button -->
+  <div class="scroll-top" id="scroll-top"></div>
+
+  <script>
+    // Create animated particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 15; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.width = Math.random() * 150 + 50 + 'px';
+      particle.style.height = particle.style.width;
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 20 + 's';
+      particle.style.animationDuration = Math.random() * 20 + 20 + 's';
+      particlesContainer.appendChild(particle);
+    }
+
+    // Scroll to top functionality
+    const scrollTopBtn = document.getElementById('scroll-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) {
+        scrollTopBtn.classList.add('visible');
+      } else {
+        scrollTopBtn.classList.remove('visible');
+      }
+    });
+
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Use same origin as API
+    const API_BASE = window.location.origin;
+
+    const appSection = document.getElementById("app-section");
+    const statusEl = document.getElementById("status");
+    const resultsEl = document.getElementById("results");
+    const previewEl = document.getElementById("preview");
+    const jdLinkEl = document.getElementById("jd-link");
+    const loaderEl = document.getElementById("loader");
+    const modeChipEl = document.getElementById("mode-chip");
+    const searchChipEl = document.getElementById("search-chip");
+    const citiesChipEl = document.getElementById("cities-chip");
+
+    document.getElementById("get-started-btn").addEventListener("click", () => {
+      appSection.style.display = "block";
+      setTimeout(() => {
+        appSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    });
+
+    function setStatus(text) {
+      statusEl.textContent = text;
+      statusEl.style.display = text ? 'block' : 'none';
+    }
+
+    function setLoading(loading) {
+      document.getElementById("manual-btn").disabled = loading;
+      document.getElementById("nl-btn").disabled = loading;
+      loaderEl.hidden = !loading;
+    }
+
+    function clearUI() {
+      setStatus("");
+      jdLinkEl.innerHTML = "";
+      resultsEl.innerHTML = "";
+      previewEl.innerHTML = "";
+      modeChipEl.textContent = "Mode: -";
+      searchChipEl.textContent = "Search: -";
+      citiesChipEl.textContent = "Cities: -";
+    }
+
+    async function callManual() {
+      const citiesRaw = document.getElementById("manual-cities").value.trim();
+      const search = document.getElementById("manual-search").value.trim();
+      if (!citiesRaw || !search) {
+        setStatus("⚠️ Please enter at least one city and a search keyword.");
+        return;
+      }
+      const cities = citiesRaw.split(",").map(c => c.trim()).filter(Boolean);
+
+      clearUI();
+
+      modeChipEl.textContent = "Mode: Manual";
+      searchChipEl.textContent = `Search: ${search}`;
+      citiesChipEl.textContent = `Cities: ${cities.join(", ")}`;
+
+      setLoading(true);
+      setStatus("🔄 Starting manual scrape...");
+
+      const cityFormatted = cities[0].replace(/\s+/g, "-").toLowerCase();
+      const searchFormatted = search.replace(/\s+/g, "-").toLowerCase();
+      const jdUrl = `https://www.justdial.com/${cityFormatted}/${searchFormatted}/`;
+      jdLinkEl.innerHTML = `🔗 Preview on Justdial: <a href="${jdUrl}" target="_blank" rel="noopener noreferrer">${jdUrl}</a>`;
+
+      try {
+        const res = await fetch(`${API_BASE}/scrape/manual`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cities, search })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setStatus("✅ Scrape completed successfully!");
+          renderResults(data);
+        } else {
+          setStatus("❌ Error: " + JSON.stringify(data));
+        }
+      } catch (e) {
+        setStatus("❌ Request failed: " + e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function callNL() {
+      const query = document.getElementById("nl-query").value.trim();
+      if (!query) {
+        setStatus("⚠️ Please enter a natural language query.");
+        return;
+      }
+
+      clearUI();
+      setLoading(true);
+      setStatus("🤖 Interpreting your query with AI and starting scrape...");
+
+      try {
+        const res = await fetch(`${API_BASE}/scrape/nl`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          const cities = data.cities || [];
+          const search = data.search || "";
+
+          modeChipEl.textContent = "Mode: AI";
+          searchChipEl.textContent = `Search: ${search || "-"}`;
+          citiesChipEl.textContent = `Cities: ${cities.join(", ") || "-"}`;
+
+          if (cities.length && search) {
+            const cityFormatted = cities[0].replace(/\s+/g, "-").toLowerCase();
+            const searchFormatted = search.replace(/\s+/g, "-").toLowerCase();
+            const jdUrl = `https://www.justdial.com/${cityFormatted}/${searchFormatted}/`;
+            jdLinkEl.innerHTML = `🔗 Preview on Justdial: <a href="${jdUrl}" target="_blank" rel="noopener noreferrer">${jdUrl}</a>`;
+          }
+
+          setStatus("✅ AI scrape completed successfully!");
+          renderResults(data);
+        } else {
+          setStatus("❌ Error: " + JSON.stringify(data));
+        }
+      } catch (e) {
+        setStatus("❌ Request failed: " + e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function renderResults(apiResult) {
+      const { search, results } = apiResult;
+      if (!results || !results.length) {
+        resultsEl.innerHTML = '<p style="color: #94a3b8;">No CSV files generated.</p>';
+        return;
+      }
+      
+      resultsEl.innerHTML = '';
+      results.forEach((r, idx) => {
+        const div = document.createElement("div");
+        div.className = "result-item";
+        div.innerHTML = `
+          <div>
+            <strong>${r.city}</strong> – ${search}<br/>
+            <div style="margin-top: 0.75rem;">
+              <button class="link" type="button" data-csv="${r.csv_path}" data-city="${r.city}" data-search="${search}" data-action="preview">
+                👁️ Preview CSV
+              </button>
+              &nbsp;&nbsp;|&nbsp;&nbsp;
+              <button class="link" type="button" data-csv="${r.csv_path}" data-action="download">
+                ⬇️ Download CSV
+              </button>
+            </div>
+          </div>
+        `;
+        resultsEl.appendChild(div);
+      });
+
+      // Attach click handlers
+      resultsEl.querySelectorAll('button[data-action]').forEach(btn => {
+        btn.addEventListener('click', async (ev) => {
+          const action = btn.getAttribute("data-action");
+          const csvPath = btn.getAttribute("data-csv");
+          if (!csvPath) return;
+
+          if (action === "download") {
+            downloadCsv(csvPath);
+          } else if (action === "preview") {
+            const city = btn.getAttribute("data-city") || "";
+            const searchTerm = btn.getAttribute("data-search") || "";
+            await previewCsv(csvPath, city, searchTerm);
+          }
+        });
+      });
+    }
+
+    async function previewCsv(csvPath, city, search) {
+      previewEl.innerHTML = '<div class="loading-shimmer" style="height: 200px; border-radius: 0.75rem;"></div>';
+      try {
+        const url = `${API_BASE}/download?csv_path=${encodeURIComponent(csvPath)}`;
+        const res = await fetch(url);
+        if (!res.ok) {
+          previewEl.innerHTML = '<p style="color: #ef4444;">Failed to load CSV for preview.</p>';
+          return;
+        }
+        const text = await res.text();
+        const rows = parseCsv(text, 20);
+        if (!rows.length) {
+          previewEl.innerHTML = '<p style="color: #94a3b8;">CSV is empty.</p>';
+          return;
+        }
+
+        const headers = rows[0];
+        const bodyRows = rows.slice(1);
+
+        let html = `<h3>📄 Preview: ${city} – ${search}</h3>`;
+        html += `<div style="overflow-x: auto;"><table class="preview-table"><thead><tr>`;
+        headers.forEach(h => {
+          html += `<th>${escapeHtml(h)}</th>`;
+        });
+        html += `</tr></thead><tbody>`;
+        bodyRows.forEach(row => {
+          html += `<tr>`;
+          row.forEach(cell => {
+            html += `<td>${escapeHtml(cell)}</td>`;
+          });
+          html += `</tr>`;
+        });
+        html += `</tbody></table></div>`;
+
+        previewEl.innerHTML = html;
+      } catch (e) {
+        previewEl.innerHTML = `<p style="color: #ef4444;">Error while previewing CSV: ${e}</p>`;
+      }
+    }
+
+    function downloadCsv(csvPath) {
+      const url = `${API_BASE}/download?csv_path=${encodeURIComponent(csvPath)}`;
+      window.open(url, "_blank");
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function parseCsv(text, maxRows) {
+      const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+      const rows = [];
+      for (let i = 0; i < lines.length; i++) {
+        if (maxRows && rows.length >= maxRows) break;
+        rows.push(parseCsvLine(lines[i]));
+      }
+      return rows;
+    }
+
+    function parseCsvLine(line) {
+      const cells = [];
+      let current = "";
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"' ) {
+          if (inQuotes && line[i + 1] === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (ch === "," && !inQuotes) {
+          cells.push(current);
+          current = "";
+        } else {
+          current += ch;
+        }
+      }
+      cells.push(current);
+      return cells;
+    }
+
+    document.getElementById("manual-btn").addEventListener("click", callManual);
+    document.getElementById("nl-btn").addEventListener("click", callNL);
+  </script>
+</body>
+</html>
