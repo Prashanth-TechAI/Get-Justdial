@@ -34,13 +34,7 @@ A powerful and intelligent JustDial web scraper that extracts business data usin
   - Easy integration with other applications
 
 ---
-
 ## 🖼️ Screenshots
-
-<details>
-<summary><strong>Click to view screenshots</strong></summary>
-
-<br>
 
 <table>
   <tr>
@@ -88,8 +82,6 @@ A powerful and intelligent JustDial web scraper that extracts business data usin
     </td>
   </tr>
 </table>
-
-</details>
 
 ## 📋 Requirements
 
