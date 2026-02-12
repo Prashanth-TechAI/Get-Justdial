@@ -37,23 +37,59 @@ A powerful and intelligent JustDial web scraper that extracts business data usin
 
 ## 🖼️ Screenshots
 
-**Home / Landing Page**  
-![Home / Landing Page](images/Media.jpeg)
+<details>
+<summary><strong>Click to view screenshots</strong></summary>
 
-**Search Options & Input**  
-![Search Options & Input](images/Media1.jpeg)
+<br>
 
-**Scraping in Progress**  
-![Scraping in Progress](images/Media2.jpeg)
+<table>
+  <tr>
+    <td align="center"><strong>Home / Landing Page</strong></td>
+    <td align="center"><strong>Search Options & Input</strong></td>
+    <td align="center"><strong>Scraping in Progress</strong></td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="images/Media.jpeg">
+        <img src="images/Media.jpeg" width="260">
+      </a>
+    </td>
+    <td align="center">
+      <a href="images/Media1.jpeg">
+        <img src="images/Media1.jpeg" width="260">
+      </a>
+    </td>
+    <td align="center">
+      <a href="images/Media2.jpeg">
+        <img src="images/Media2.jpeg" width="260">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Results & CSV Preview</strong></td>
+    <td align="center"><strong>Download CSV View</strong></td>
+    <td align="center"><strong>Additional UI View</strong></td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="images/Media3.jpeg">
+        <img src="images/Media3.jpeg" width="260">
+      </a>
+    </td>
+    <td align="center">
+      <a href="images/Media4.jpeg">
+        <img src="images/Media4.jpeg" width="260">
+      </a>
+    </td>
+    <td align="center">
+      <a href="images/Media5.jpeg">
+        <img src="images/Media5.jpeg" width="260">
+      </a>
+    </td>
+  </tr>
+</table>
 
-**Results & CSV Preview**  
-![Results & CSV Preview](images/Media3.jpeg)
-
-**Download CSV View**  
-![Download CSV View](images/Media4.jpeg)
-
-**Additional UI View**  
-![Additional UI View](images/Media5.jpeg)
+</details>
 
 ## 📋 Requirements
 
