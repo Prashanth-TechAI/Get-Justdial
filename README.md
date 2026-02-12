@@ -35,6 +35,26 @@ A powerful and intelligent JustDial web scraper that extracts business data usin
 
 ---
 
+## 🖼️ Screenshots
+
+**Home / Landing Page**  
+![Home / Landing Page](images/Media.jpeg)
+
+**Search Options & Input**  
+![Search Options & Input](images/Media1.jpeg)
+
+**Scraping in Progress**  
+![Scraping in Progress](images/Media2.jpeg)
+
+**Results & CSV Preview**  
+![Results & CSV Preview](images/Media3.jpeg)
+
+**Download CSV View**  
+![Download CSV View](images/Media4.jpeg)
+
+**Additional UI View**  
+![Additional UI View](images/Media5.jpeg)
+
 ## 📋 Requirements
 
 Before you begin, ensure you have the following installed:
